@@ -46,13 +46,15 @@ namespace projeto_dgv
             dgv_venda.AllowUserToOrderColumns = true;
 
             //configurando a coluna do valor
-            dgv_venda.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv_venda.Columns[3].DefaultCellStyle.Format = "###.###.###0,00";
+            dgv_venda.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgv_venda.Columns[4].DefaultCellStyle.Format = "###.###.###0,00";
+
+            dgv_venda.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgv_venda.Columns[5].DefaultCellStyle.Format = "###.###.###0,00";
         }
 
         private void btn_importar_Click(object sender, EventArgs e)
         {
-            double total = 0;
             dgv_venda.RowCount = 0;
 
             ofd_arquivo.FileName = "";
@@ -70,8 +72,61 @@ namespace projeto_dgv
                 string valor_compra = dados[3];
                 string valor_venda = dados[4];
                 string estoque = dados[5];
+
+                dgv_venda.Rows.Add(false, id, ean, produto, valor_compra, valor_venda, estoque);
             }
 
+        }
+
+        private void btn_marcar_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow linha in dgv_venda.Rows)
+                linha.Cells[0].Value = true;
+        }
+
+        private void btn_desmarcar_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow linha in dgv_venda.Rows)
+                linha.Cells[0].Value = false;
+        }
+
+        bool marcar = false;
+        private void dgv_venda_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (marcar == false) {
+                marcar = true;
+                dgv_venda.CurrentRow.Cells[0].Value = marcar;
+            }
+            else
+            {
+                marcar = false;
+                dgv_venda.CurrentRow.Cells[0].Value = marcar;
+            }    
+        }
+
+        private void btn_excluir_Click(object sender, EventArgs e)
+        {
+            if ((dgv_venda.Rows.Count > 0) && Convert.ToBoolean(dgv_venda.CurrentCell.Value) == true)
+            {
+                dgv_venda.Rows.RemoveAt(dgv_venda.CurrentCell.RowIndex);    
+            }
+            else if (dgv_venda.Rows.Count <= 0)
+            {
+                MessageBox.Show("Não existem Vendas cadastradas!", "Atenção!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                MessageBox.Show("Nenhuma venda foi selecionada!", "Atenção!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void btn_aumento_porcentagem_Click(object sender, EventArgs e)
+        {
+            double porcentagem = Convert.ToDouble(nud_porcentagem.Value) / 100;
+
+            double valor_atual = Convert.ToDouble(dgv_venda.CurrentRow.Cells[4].Value);
+
+            dgv_venda.CurrentRow.Cells[4].Value = ((valor_atual * porcentagem) + valor_atual).ToString();
         }
     }
 }
