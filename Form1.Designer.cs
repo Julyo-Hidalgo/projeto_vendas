@@ -44,11 +44,12 @@
             // 
             // btn_importar
             // 
-            this.btn_importar.Location = new System.Drawing.Point(905, 56);
+            this.btn_importar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_importar.Location = new System.Drawing.Point(882, 103);
             this.btn_importar.Name = "btn_importar";
-            this.btn_importar.Size = new System.Drawing.Size(75, 23);
+            this.btn_importar.Size = new System.Drawing.Size(98, 36);
             this.btn_importar.TabIndex = 1;
-            this.btn_importar.Text = "button1";
+            this.btn_importar.Text = "importar";
             this.btn_importar.UseVisualStyleBackColor = true;
             this.btn_importar.Click += new System.EventHandler(this.btn_importar_Click);
             // 

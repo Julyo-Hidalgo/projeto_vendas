@@ -19,7 +19,7 @@ namespace projeto_dgv
         }
 
         private void main_form_Load(object sender, EventArgs e)
-        {
+        { 
             //definindo as colunas
             dgv_venda.Columns.Insert(0, new DataGridViewCheckBoxColumn());
             dgv_venda.Columns.Insert(1, new DataGridViewTextBoxColumn());
@@ -52,8 +52,26 @@ namespace projeto_dgv
 
         private void btn_importar_Click(object sender, EventArgs e)
         {
+            double total = 0;
+            dgv_venda.RowCount = 0;
+
             ofd_arquivo.FileName = "";
             ofd_arquivo.ShowDialog();
+
+            StreamReader arquivo = File.OpenText(ofd_arquivo.FileName);
+
+            string linha;
+            while ((linha = arquivo.ReadLine()) != null)
+            {
+                string[] dados = linha.Split(';');
+                string id = dados[0];
+                string ean = dados[1];
+                string produto = dados[2];
+                string valor_compra = dados[3];
+                string valor_venda = dados[4];
+                string estoque = dados[5];
+            }
+
         }
     }
 }
