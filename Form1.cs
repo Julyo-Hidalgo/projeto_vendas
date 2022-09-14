@@ -19,7 +19,7 @@ namespace projeto_dgv
         }
 
         private void main_form_Load(object sender, EventArgs e)
-        { 
+        {
             //definindo as colunas
             dgv_venda.Columns.Insert(0, new DataGridViewCheckBoxColumn());
             dgv_venda.Columns.Insert(1, new DataGridViewTextBoxColumn());
@@ -28,7 +28,7 @@ namespace projeto_dgv
             dgv_venda.Columns.Insert(4, new DataGridViewTextBoxColumn());
             dgv_venda.Columns.Insert(5, new DataGridViewTextBoxColumn());
             dgv_venda.Columns.Insert(6, new DataGridViewTextBoxColumn());
-            
+
             //renomeando
             dgv_venda.Columns[0].Name = "OK";
             dgv_venda.Columns[1].Name = "id";
@@ -90,27 +90,37 @@ namespace projeto_dgv
                 linha.Cells[0].Value = false;
         }
 
-        bool marcar = false;
+        bool condicao = false;/*Na primeira vez o valor da celula é falso, então atribui um valor falso para esta variavel de condição*/
         private void dgv_venda_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (marcar == false) {
-                marcar = true;
-                dgv_venda.CurrentRow.Cells[0].Value = marcar;
-            }
-            else
+            if (dgv_venda.Rows.Count > 0 && e.ColumnIndex == 0)
             {
-                marcar = false;
-                dgv_venda.CurrentRow.Cells[0].Value = marcar;
-            }    
+                if (condicao == false)
+                {
+                    dgv_venda.CurrentCell.Value = true;
+                    condicao = true;
+                }
+                else
+                {
+                    dgv_venda.CurrentCell.Value = false;
+                    condicao = false;
+                }
+            }
         }
 
         private void btn_excluir_Click(object sender, EventArgs e)
         {
-            if ((dgv_venda.Rows.Count > 0) && Convert.ToBoolean(dgv_venda.CurrentCell.Value) == true)
+            if ((dgv_venda.Rows.Count > 0) && Convert.ToBoolean(dgv_venda.CurrentRow.Cells[0].Value) == true)
             {
-                dgv_venda.Rows.RemoveAt(dgv_venda.CurrentCell.RowIndex);    
+                for (int i = dgv_venda.RowCount - 1; i >= 0; i--)
+                {
+                    if (Convert.ToBoolean(dgv_venda.Rows[i].Cells[0].Value) == true)
+                    {
+                        dgv_venda.Rows.RemoveAt(dgv_venda.Rows[i].Index);
+                    }
+                }
             }
-            else if (dgv_venda.Rows.Count <= 0)
+            else if (dgv_venda.Rows.Count == 0)
             {
                 MessageBox.Show("Não existem Vendas cadastradas!", "Atenção!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -122,11 +132,12 @@ namespace projeto_dgv
 
         private void btn_aumento_porcentagem_Click(object sender, EventArgs e)
         {
-            double porcentagem = Convert.ToDouble(nud_porcentagem.Value) / 100;
-
-            double valor_atual = Convert.ToDouble(dgv_venda.CurrentRow.Cells[4].Value);
-
-            dgv_venda.CurrentRow.Cells[4].Value = ((valor_atual * porcentagem) + valor_atual).ToString();
+            if (dgv_venda.CurrentRow.Cells.Count > 0 && dgv_venda.CurrentCell.ColumnIndex == 5)
+            {
+                double porcentagem = Convert.ToDouble(nud_porcentagem.Value);
+                double valor_atual = Convert.ToDouble(dgv_venda.CurrentCell.Value);
+                dgv_venda.CurrentCell.Value = Math.Round(valor_atual + ((porcentagem/100) * valor_atual), 2).ToString("F2");
+            }
         }
     }
 }
